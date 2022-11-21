@@ -5,6 +5,7 @@ function preload() {
 }
 
 function setup() {
+
   createCanvas(1200, 1200);
   frameRate(6);   
 
@@ -31,7 +32,7 @@ function draw() {
     text("Game Over !", 260, 460);
     textSize(48);
     text("Press Enter...", 400, 540);
-}
+  }
   
   textSize(24);
   text("Score:"+str(player.score), 10, 30, 0);
