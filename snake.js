@@ -1,9 +1,16 @@
+
+function preload() {
+  pixel = loadFont('assets/PressStart2P-Regular.ttf');
+  snakeSprite = loadImage('img/snakesprite.png');
+}
+
 function setup() {
   createCanvas(1200, 1200);
   frameRate(6);   
 
+  textFont(pixel);
   player = new Snake(200,200,0,0); 
-  candy = new Candy(random(200,800),random(200,800));  
+  candy = new Candy();  
 }
 
 function draw() {
@@ -15,20 +22,19 @@ function draw() {
     square(200,200,800);
     
     candy.show();
-    
     player.move();
 
   
   }else{
     player.gameOver = true;
     textSize(96);
-    text("Game Over !", 100, 300, 0);
+    text("Game Over !", 260, 460);
     textSize(48);
-    text("Press Enter...", 160, 360, 0);
+    text("Press Enter...", 400, 540);
 }
   
   textSize(24);
-  text("Score : "+str(player.score), 10, 30, 0);
+  text("Score:"+str(player.score), 10, 30, 0);
 }
 
 function keyPressed() {
@@ -45,141 +51,138 @@ function keyPressed() {
   }
 }
 
-function makeCandy(){
-
-    candy = new Candy(random(200,800),random(200,800)); 
-
-}
-
 class Candy {
 
-    constructor(x, y){
-        this.alive = true;
-        this.spawn();
-    }
-    
-    spawn(){
-        for (let i = 0; i < 840; i +=40){
-          if (this.x <= i){ 
-            this.posX = i;
-            this.i = 800;
-          }
+  constructor(){
+    this.x = random(200,800);
+    this.y = random(200,800);
+    this.posX = 480;
+    this.posY = 480;
+    this.alive = true;
+    this.spawn();
+  }
+  
+  spawn(x, y){
+      for (let i = 0; i < 840; i +=40){
+        if (x <= i){ 
+          this.posX = i;
+          i = 800;
         }
-        for (let i = 0; i < 840; i +=40){
-          if (this.y <= i){ 
-            this.posY = i;
-            this.i = 800;
-          }
+      }
+      for (let i = 0; i < 840; i +=40){
+        if (y <= i){ 
+          this.posY = i;
+          i = 800;
         }
-    }
-    
-    
-    show(){
-      this.col();
-          
-      if(this.alive){
-        
-        fill(204, 102, 0);
-        square(this.posX,this.posY,40);
       }
-    }
-    
-    col(){
-    
-      if( player.posX == this.posX & player.posY == this.posY & this.alive){
-        this.alive = false;
-        player.grow();
+  }
+  
+  show(){
+    this.col();
         
-      }
+    if(this.alive){        
+      fill(204, 102, 0);
+      square(this.posX,this.posY,40);
+    }
+  }
+  
+  col(){
+  
+    if( player.posX == this.posX & player.posY == this.posY & this.alive){
+      this.alive = false;
+      player.grow();
       
     }
+    
+  }
     
   
+}
+
+
+
+class Snake{
+  
+  constructor( x, y,  sX,  sY) {
+    this.posX = x;
+    this.posY = y;
+    this.speedx = sX;
+    this.speedy = sY;
+
+    this.score = 0;
+    this.gameOver = false;
+    
+    this.tailX = [];
+    this.tailY = [];
+    this.spriteX = 120;
   }
-
-
-
-  class Snake{
+  
+  grow(){
+    this.score++;
+    candy = new Candy();
+  }
+  
+  move(){
+    this.tailX[1] = this.posX; 
+    this.tailY[1] = this.posY;
     
-    constructor( x, y,  sX,  sY) {
-      this.posX = x;
-      this.posY = y;
-      this.speedx = sX;
-      this.speedy = sY;
+    this.posY += this.speedy;
+    this.posX += this.speedx;  
+    
+    fill(0);
+    stroke(153);
+    image(snakeSprite.get(this.spriteX,40,40,40),this.posX,this.posY);
 
-      this.score = 0;
-      this.gameOver = false;
-     
-      this.tailX = [];
-      this.tailY = [];
-
-      this.snakeSprite = loadImage('img/snakesprite.jpg');
+    for (let i = this.score; i >= 1; i--){
+      //Vérifie les collisions 
+      this.col_tail(this.tailX[i],this.tailY[i]);
+      
+      // Oppère le déplacement 
+      this.tailX[i+1] = this.tailX[i]; this.tailY[i+1] = this.tailY[i];
+      
+      // Affiche la Tail
+      image(snakeSprite.get(40,0,40,40),this.tailX[i],this.tailY[i],40); 
     }
     
-    grow(){
-      this.score +=1;
-      candy = new Candy();
+    if ((this.posX < 200 | this.posX > width-240) | (this.posY < 200 | this.posY > width-240)){
+      this.gameOver = true;
     }
-    
-    move(){
-      this.tailX[1] = this.posX; 
-      this.tailY[1] = this.posY;
-      
-      this.posY += this.speedy;
-      this.posX += this.speedx;  
-      
-      fill(0);
-      stroke(153);
-      image(this.snakeSprite.get(120,0,40,40),this.posX,this.posY);
-      
-      square(this.posX,this.posY,40); 
-      for (let i = this.score; i >= 1; i--){
-        //Vérifie les collisions 
-        this.col_tail(this.tailX[i],this.tailY[i]);
-        
-        // Oppère le déplacement 
-        this.tailX[i+1] = this.tailX[i]; this.tailY[i+1] = this.tailY[i];
-        
-        // Affiche la Tail
-        square(this.tailX[i],this.tailY[i],40); 
-      }
-      
-      if ((this.posX < 200 | this.posX > width-240) | (this.posY < 200 | this.posY > width-240)){
-        this.gameOver = true;
-      }
+  }
+  
+  col_tail( tailX,  tailY){
+    if (tailX == this.posX & tailY == this.posY){
+      this.gameOver = true;
     }
-    
-    col_tail( tailX,  tailY){
-      if (tailX == this.posX & tailY == this.posY){
-        this.gameOver = true;
-      }
-    
-    }
-    
-     newgame(){
-      this.gameOver = false;
-      this.posX = 200;
-      this.posY = 200;
-      this.speedx = 40;
+  }
+  
+    newgame(){
+    this.gameOver = false;
+    this.posX = 200;
+    this.posY = 200;
+    this.speedx = 40;
+    this.speedy = 0;
+    this.score = 0;
+  }
+  
+    up(){
+      this.speedy = -40;
+      this.speedx = 0;
+      this.spriteX = 40;
+  }
+    down(){
+      this.speedy = 40;
+      this.speedx = 0;
+      this.spriteX = 80;
+  }
+    left(){
       this.speedy = 0;
-      this.score = 0;
-    }
-    
-     up(){
-        this.speedy = -40;
-        this.speedx = 0;
-    }
-     down(){
-        this.speedy = 40;
-        this.speedx = 0;
-    }
-     left(){
-        this.speedy = 0;
-        this.speedx = -40;
-    }
-     right(){
-        this.speedy = 0;
-        this.speedx = 40;
-    }
-    
+      this.speedx = -40;
+      this.spriteX = 0;
   }
+    right(){
+      this.speedy = 0;
+      this.speedx = 40;
+      this.spriteX = 120;
+  }
+  
+}
