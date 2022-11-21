@@ -1,13 +1,14 @@
 .container {  display: grid;
-    grid-template-columns: 0.8fr 1.4fr 0.8fr;
-    grid-template-rows: 0fr 2.4fr 0.4fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
-    grid-template-areas:
-      ". . ."
-      ". game ."
-      ". . .";
-  }
-  
-  .game { grid-area: game; }
-  
+  grid-template-columns: 0.8fr 1.4fr 0.8fr;
+  grid-template-rows: 2.4fr;
+  gap: 0px 0px;
+  grid-auto-flow: column;
+  grid-template-areas:
+    ". game .";
+}
+
+.game { grid-area: game; }
+
+body{
+  background-color: #f6fceb;
+}

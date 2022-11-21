@@ -2,6 +2,7 @@
 function preload() {
   pixel = loadFont('assets/PressStart2P-Regular.ttf');
   snakeSprite = loadImage('img/snakesprite.png');
+  candySprite = loadImage('img/candysprite.png');
 }
 
 function setup() {
@@ -17,9 +18,12 @@ function setup() {
 function draw() {
   
   if(!player.gameOver){
-    background(204);
+    background("#f6fceb");
     
-    fill(255);          //Arène 
+    fill("#44af92");          //Arène 
+    square(100,100,1000);
+    
+    fill("#d6dfc2");
     square(200,200,800);
     
     candy.show();
@@ -29,13 +33,13 @@ function draw() {
   }else{
     player.gameOver = true;
     textSize(96);
-    text("Game Over !", 260, 460);
+    text("Game Over!", 160, 460);
     textSize(48);
-    text("Press Enter...", 400, 540);
+    text("Press Enter...", 300, 540);
   }
   
   textSize(24);
-  text("Score:"+str(player.score), 10, 30, 0);
+  text("Score:"+str(player.score), 200, 180, 0);
 }
 
 function keyPressed() {
@@ -66,6 +70,7 @@ class Candy {
     if(this.alive){        
       fill(204, 102, 0);
       square(this.posX,this.posY,40);
+      image(candySprite.get(0,0,40,40),this.posX,this.posY);
     }
   }
   
@@ -78,8 +83,6 @@ class Candy {
     }
     
   }
-    
-  
 }
 
 
@@ -113,17 +116,11 @@ class Snake{
     this.posX += this.speedx;  
     
     fill(0);
-    stroke(153);
     image(snakeSprite.get(this.spriteX,40,40,40),this.posX,this.posY);
 
     for (let i = this.score; i >= 1; i--){
-      //Vérifie les collisions 
       this.col_tail(this.tailX[i],this.tailY[i]);
-      
-      // Oppère le déplacement 
       this.tailX[i+1] = this.tailX[i]; this.tailY[i+1] = this.tailY[i];
-      
-      // Affiche la Tail
       image(snakeSprite.get(40,0,40,40),this.tailX[i],this.tailY[i],40); 
     }
     
