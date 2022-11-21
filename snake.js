@@ -1,9 +1,9 @@
 function setup() {
   createCanvas(1200, 1200);
   frameRate(6);   
-
+  makeCandy();
   player = new Snake(200,200,0,0); 
-  candy = new Candy(random(200,800),random(200,800));  
+  candy = new Candy();  
 }
 
 function draw() {
@@ -47,26 +47,27 @@ function keyPressed() {
 
 function makeCandy(){
 
-    candy = new Candy(random(200,800),random(200,800)); 
+    candy = new Candy();
+    candy.spawn(random(200,800),random(200,800)); 
 
 }
 
 class Candy {
 
-    constructor(x, y){
+    constructor(){
         this.alive = true;
         this.spawn();
     }
     
-    spawn(){
+    spawn(x, y){
         for (let i = 0; i < 840; i +=40){
-          if (this.x <= i){ 
+          if (x <= i){ 
             this.posX = i;
             this.i = 800;
           }
         }
         for (let i = 0; i < 840; i +=40){
-          if (this.y <= i){ 
+          if (y <= i){ 
             this.posY = i;
             this.i = 800;
           }
