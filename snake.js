@@ -54,27 +54,9 @@ function keyPressed() {
 class Candy {
 
   constructor(){
-    this.x = random(200,800);
-    this.y = random(200,800);
-    this.posX = 480;
-    this.posY = 480;
+    this.posX = int(random(0,20))*40+200;
+    this.posY = int(random(0,20))*40+200;
     this.alive = true;
-    this.spawn();
-  }
-  
-  spawn(x, y){
-      for (let i = 0; i < 840; i +=40){
-        if (x <= i){ 
-          this.posX = i;
-          i = 800;
-        }
-      }
-      for (let i = 0; i < 840; i +=40){
-        if (y <= i){ 
-          this.posY = i;
-          i = 800;
-        }
-      }
   }
   
   show(){
