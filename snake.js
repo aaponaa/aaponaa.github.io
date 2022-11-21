@@ -1,8 +1,15 @@
+let candySound;
+let gameoversSound;
+
 
 function preload() {
   pixel = loadFont('assets/PressStart2P-Regular.ttf');
   snakeSprite = loadImage('img/snakesprite.png');
   candySprite = loadImage('img/candysprite.png');
+
+  soundFormats('mp3', 'ogg');
+  candySound = loadSound('sound/candy.mp3');
+  gameoversSound = loadSound('sound/gameover.mp3');
 }
 
 function setup() {
@@ -68,8 +75,6 @@ class Candy {
     this.col();
         
     if(this.alive){        
-      fill(204, 102, 0);
-      square(this.posX,this.posY,40);
       image(candySprite.get(0,0,40,40),this.posX,this.posY);
     }
   }
@@ -79,7 +84,7 @@ class Candy {
     if( player.posX == this.posX & player.posY == this.posY & this.alive){
       this.alive = false;
       player.grow();
-      
+      candySound.play();
     }
     
   }
@@ -126,12 +131,14 @@ class Snake{
     
     if ((this.posX < 200 | this.posX > width-240) | (this.posY < 200 | this.posY > width-240)){
       this.gameOver = true;
+      gameoversSound.play();
     }
   }
   
   col_tail( tailX,  tailY){
     if (tailX == this.posX & tailY == this.posY){
       this.gameOver = true;
+      gameoversSound.play();
     }
   }
   
